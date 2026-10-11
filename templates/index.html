@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Text Summarizer - Turn long text and dialogues into clear, concise summaries using fine-tuned PEGASUS.">
+  <title>Text Summarizer - AI Text Summarization</title>
+  
+  <!-- Modern Typography: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Top Navigation / Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-group">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1 class="app-title">Text Summarizer</h1>
+          <p class="app-tagline">Turn long text into clear, concise summaries.</p>
+        </div>
+      </div>
+      
+      <div class="header-status">
+        <span id="modelStatusBadge" class="status-badge status-loading" title="Model connection state">
+          <span class="status-dot"></span>
+          <span id="modelStatusText">Connecting...</span>
+        </span>
+        <span id="deviceBadge" class="device-badge">CPU</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Workspace -->
+  <main class="main-container">
+    <div class="workspace-grid">
+      
+      <!-- Left Column: Input and Controls -->
+      <section class="card input-card" aria-labelledby="input-heading">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="step-indicator">1</span>
+            <h2 id="input-heading" class="card-title">Source Text</h2>
+          </div>
+          <div class="card-actions">
+            <button type="button" id="sampleBtn" class="btn btn-secondary btn-sm" title="Load sample dialogue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <path d="M12 18v-6"></path>
+                <path d="M9 15h6"></path>
+              </svg>
+              Sample Text
+            </button>
+            <button type="button" id="pasteBtn" class="btn btn-secondary btn-sm" title="Paste from clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              </svg>
+              Paste
+            </button>
+            <button type="button" id="clearBtn" class="btn btn-ghost btn-sm" title="Clear input text">
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="input-wrapper">
+          <textarea
+            id="inputText"
+            class="text-input"
+            rows="10"
+            placeholder="Type or paste your conversation, dialogue, or article here...&#10;&#10;Example:&#10;Hannah: Hey, are you free for lunch today?&#10;Amanda: Sure! What are you craving?&#10;Hannah: Maybe sushi at Sakura around 12:30?&#10;Amanda: Sounds perfect, see you there!"
+            aria-label="Input text to summarize"
+          ></textarea>
+        </div>
+
+        <div class="input-stats-bar">
+          <div class="stats-counters">
+            <span class="stat-pill"><strong id="inputWordCount">0</strong> words</span>
+            <span class="stat-pill"><strong id="inputCharCount">0</strong> characters</span>
+          </div>
+          <span class="keyboard-tip">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to summarize</span>
+        </div>
+
+        <!-- Summary Length & Generation Settings -->
+        <div class="settings-section">
+          <div class="settings-header">
+            <span class="step-indicator">2</span>
+            <h3 class="settings-title">Summary Length & Settings</h3>
+            <span class="token-info-pill" title="PEGASUS generates tokens (sub-words). 1 token ≈ 0.75 words.">
+              Token-based length
+            </span>
+          </div>
+
+          <!-- Presets -->
+          <div class="presets-group" role="group" aria-label="Summary length presets">
+            <button type="button" class="preset-btn" data-preset="concise">
+              <span class="preset-name">Concise</span>
+              <span class="preset-tokens">~60 tokens</span>
+            </button>
+            <button type="button" class="preset-btn active" data-preset="balanced">
+              <span class="preset-name">Balanced</span>
+              <span class="preset-tokens">~128 tokens</span>
+            </button>
+            <button type="button" class="preset-btn" data-preset="detailed">
+              <span class="preset-name">Detailed</span>
+              <span class="preset-tokens">~200 tokens</span>
+            </button>
+            <button type="button" class="preset-btn" data-preset="custom">
+              <span class="preset-name">Custom</span>
+              <span class="preset-tokens">Adjust sliders</span>
+            </button>
+          </div>
+
+          <!-- Sliders -->
+          <div class="sliders-container">
+            <div class="slider-field">
+              <div class="slider-label-row">
+                <label for="maxLengthSlider" class="slider-label">Maximum Length (Tokens)</label>
+                <span id="maxLengthVal" class="slider-badge">128 tokens</span>
+              </div>
+              <input
+                type="range"
+                id="maxLengthSlider"
+                class="range-slider"
+                min="30"
+                max="256"
+                step="5"
+                value="128"
+                aria-label="Maximum summary length in tokens"
+              >
+              <div class="slider-scale">
+                <span>30 (Short)</span>
+                <span>128 (Standard)</span>
+                <span>256 (Long)</span>
+              </div>
+            </div>
+
+            <div class="slider-field">
+              <div class="slider-label-row">
+                <label for="minLengthSlider" class="slider-label">Minimum Length (Tokens)</label>
+                <span id="minLengthVal" class="slider-badge">20 tokens</span>
+              </div>
+              <input
+                type="range"
+                id="minLengthSlider"
+                class="range-slider"
+                min="10"
+                max="100"
+                step="5"
+                value="20"
+                aria-label="Minimum summary length in tokens"
+              >
+              <div class="slider-scale">
+                <span>10 (Brief)</span>
+                <span>50 (Moderate)</span>
+                <span>100 (Substantial)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Token vs Word Clarification Note -->
+          <p class="token-clarification-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <strong>Note on Length:</strong> PEGASUS controls length via subword tokens, not exact word counts. 100 tokens typically yield around 70&ndash;80 words.
+          </p>
+        </div>
+
+        <!-- Action CTA -->
+        <div class="action-footer">
+          <button type="button" id="summarizeBtn" class="btn btn-primary btn-lg" aria-label="Generate Summary">
+            <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+            <svg class="btn-icon" id="btnIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <span id="btnText">Generate Summary</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Column: Output Section -->
+      <section class="card output-card" aria-labelledby="output-heading">
+        <div class="card-header">
+          <div class="card-title-group">
+            <span class="step-indicator">3</span>
+            <h2 id="output-heading" class="card-title">Generated Summary</h2>
+          </div>
+          <div class="card-actions" id="outputActions" style="display: none;">
+            <button type="button" id="copyBtn" class="btn btn-secondary btn-sm" title="Copy summary to clipboard">
+              <svg id="copyIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copyText">Copy Summary</span>
+            </button>
+            <button type="button" id="resetBtn" class="btn btn-ghost btn-sm" title="Reset summary">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon-wrapper">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <h3 class="empty-title">No Summary Generated Yet</h3>
+          <p class="empty-description">Enter your text or choose a sample on the left, then click <strong>Generate Summary</strong> to see your result.</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state" style="display: none;">
+          <div class="pulsing-loader">
+            <div class="pulse-ring"></div>
+            <div class="pulse-ring"></div>
+            <div class="pulse-dot"></div>
+          </div>
+          <h3 class="loading-title">Generating Summary...</h3>
+          <p class="loading-subtext">The fine-tuned PEGASUS model is analyzing the input and synthesizing key points.</p>
+        </div>
+
+        <!-- Result Content -->
+        <div id="resultContent" class="result-content" style="display: none;">
+          <div class="summary-box">
+            <p id="summaryText" class="summary-paragraph"></p>
+          </div>
+
+          <!-- Metadata & Statistical Metrics -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <span class="metric-label">Original Text</span>
+              <span class="metric-value" id="metricInputWords">0 <small>words</small></span>
+              <span class="metric-sub" id="metricInputTokens">0 tokens</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Summary</span>
+              <span class="metric-value" id="metricSummaryWords">0 <small>words</small></span>
+              <span class="metric-sub" id="metricSummaryTokens">0 tokens</span>
+            </div>
+            <div class="metric-card highlight-metric">
+              <span class="metric-label">Compression</span>
+              <span class="metric-value" id="metricReduction">0%</span>
+              <span class="metric-sub">Reduction</span>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Latency</span>
+              <span class="metric-value" id="metricLatency">0.0s</span>
+              <span class="metric-sub">Inference time</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Container -->
+        <div id="errorAlert" class="alert alert-error" style="display: none;" role="alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <div class="alert-content">
+            <strong id="errorAlertTitle">Generation Error</strong>
+            <p id="errorAlertMessage">An unexpected error occurred during inference.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="/static/js/script.js"></script>
+</body>
+</html>

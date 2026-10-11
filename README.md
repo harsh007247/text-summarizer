@@ -1,37 +1,125 @@
-# Data-Science-Projects-For-Resumes
+# Text Summarizer - PEGASUS Web Application
 
-![image](https://github.com/krishnaik06/Data-Science-Projects-For-Resumes/assets/20041231/3c2a6643-73ff-4235-858f-1c70d653a0ce)
+A clean, high-performance web application and REST API for abstractive text summarization powered by a fine-tuned Google **PEGASUS** model (trained on the SAMSum dialogue dataset). Built with **FastAPI**, **HTML5**, **CSS3**, and **Vanilla JavaScript**.
 
-### Machine Learning, Deep Learning, and NLP Projects
+---
 
-1. **First End-To-End ML Project for Starters [Student Performance Prediction]**  [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=Rv6UFGNmNZg&list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG&index=2)
+## 🚀 Key Features
 
-2. **End-to-End NLP Project with GitHub Action, MLOps, and Deployment [Text Summarization]**  [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=p7V4Aa7qEpw&list=PLZoTAELRMXVOjQdyqlCmOtq1nZnSsWvag&index=3)
+- **Fine-Tuned PEGASUS Model**: Utilizes your locally trained model checkpoint for conversational & text summarization.
+- **Simplified Single-File Backend (`app.py`)**: All FastAPI logic, routes, and validation consolidated in a single, clean Python file.
+- **Simple Startup (`main.py`)**: Clean entry point that launches the Uvicorn ASGI server.
+- **Single-Load Model Architecture**: Loads PEGASUS weights once at application startup into memory (`eval()` mode with `torch.no_grad()`).
+- **Dynamic User-Controlled Length**:
+  - Sliders for **Maximum Length** and **Minimum Length** in subword tokens.
+  - Quick presets: **Concise** (~60 tokens), **Balanced** (~128 tokens), and **Detailed** (~200 tokens).
+  - Clear UI distinction between subword tokens and exact word counts.
+- **Modern, Polished Interface**:
+  - Clean light theme with an Indigo / Violet accent palette and Inter typography.
+  - Live word and character counting.
+  - Preloaded conversation samples for instant testing.
+  - Live status indicator (PEGASUS Ready / CPU or CUDA device detection).
+  - Summary metrics dashboard: word counts, token counts, compression/reduction percentage, and inference latency.
+  - One-click **Copy Summary** with visual feedback.
+  - Keyboard shortcut: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> (or <kbd>Cmd</kbd> + <kbd>Enter</kbd>).
 
-3. **End-to-End ML Project Implementation Using AWS Sagemaker** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=Le-A72NjaWs&list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG&index=16)
+---
 
-4. **Computer Vision: End-to-End Cell Segmentation Using Yolo V8**
-    - (Part 1) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=r8l31swbU1g&list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG&index=17) 
-    - (Part 2) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=eiK-6ZhphiA&list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG&index=18) 
+## 📁 Clean & Simple File Structure
 
-5. **Deep Learning Project with Deployment, MLOps, and DVC [Chicken Disease Classification]** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=p1bfK8ZJgkE&list=PLZoTAELRMXVPS-dOaVbAux22vzqdgoGhG&index=14)
-6. **Audio Classification Projects**
-    - (Part 1) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=mHPpCXqQd7Y&t=644s&pp=ygUga3Jpc2ggbmFpayBhdWRpbyBjbGFzc2lmaWNhdGlvbiA%3D) 
-    - (Part 2) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=4F-cwOkMdTE&t=449s&pp=ygUga3Jpc2ggbmFpayBhdWRpbyBjbGFzc2lmaWNhdGlvbiA%3D)
-    - (Part 3) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=uTFU7qThylE&pp=ygUga3Jpc2ggbmFpayBhdWRpbyBjbGFzc2lmaWNhdGlvbiA%3D) 
-    - (Part 4) [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=cqndT517NcQ&pp=ygUga3Jpc2ggbmFpayBhdWRpbyBjbGFzc2lmaWNhdGlvbiA%3D)
-7. **End-to-End ML Project with MLFLOW** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=pxk1Fr33-L4)
+```text
+text-summarizer/
+│
+├── config/
+│   └── config.yaml                     # Model paths & dataset configuration
+│
+├── artifacts/
+│   └── model_trainer/
+│       ├── pegasus-samsum-model/       # Trained model checkpoint (weights, config)
+│       └── tokenizer/                  # Tokenizer vocabulary & configuration
+│
+├── src/textsummarizer/
+│   ├── config/configuration.py         # Reads config.yaml
+│   └── pipeline/prediction.py          # PEGASUS inference pipeline
+│
+├── templates/
+│   └── index.html                      # Semantic HTML5 frontend interface
+│
+├── static/
+│   ├── css/style.css                   # Custom responsive stylesheet
+│   └── js/script.js                    # Vanilla JS counters, sliders, API calls
+│
+├── app.py                              # All FastAPI backend routes & validation
+├── main.py                             # Server entry point (uvicorn runner)
+├── requirements.txt                    # Project dependencies
+└── PROJECT_CHANGES.txt                 # Detailed change log documentation
+```
 
-8. **End-to-End ML Project Implementation with Dockers, GitHub Action** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=MJ1vWb1rGwM)
-9. **Langchain Open AI Project** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=_FpT1cwcSLg&list=PLZoTAELRMXVORE4VF7WQ_fAl0L1Gljtar)
-10. **Kidney Disease Classification** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=86BKEv0X2xU)
-11. **End To End Generative AI Projects**
-    - **End To End Advanced RAG App Using AWS Bedrock And Langchain** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=0LE5XrxGvbo)
-    - **Fine Tune LLAMA 2 With Custom Dataset Using LoRA And QLoRA Techniques** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=Vg3dS-NLUT4) 
-    - **End To End Youtube Video Transcribe Summarizer LLM App With Google Gemini Pro** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=HFfXvfFe9F8)
-    - **Step-by-Step Guide to Building a RAG LLM App with LLamA2 and LLaMAindex** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=f-AXdiCyiT8)
-    - **End to end RAG LLM App Using Llamaindex and OpenAI- Indexing and Querying Multiple pdf's** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=hH4WkgILUD4)
-    - **Modified End To End Resume ATS Tracking LLM Project With Google Gemini Pro** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=VZOnp2YpY8Q)
-    - **End To End Text To SQL LLM App Along With Querying SQL Database Using Google Gemini Pro** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=wFdFLWc-W4k)
-    - **End To End Multi Language Invoice Extractor Project Using Google Gemini Pro Free LLM Model** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=-ny5_RSMV6kk)
-    - **Build a PDF Document Question Answering LLM System With Langchain,Cassandra,Astra DB,Vector Database** [![YouTube](https://img.shields.io/badge/YouTube-Video-red)](https://www.youtube.com/watch?v=zxo3T4aQj6Q)
+---
+
+## 🛠️ Quick Start & Setup
+
+### 1. Activate Environment
+```powershell
+.\env\Scripts\activate
+```
+
+### 2. Run the Application
+Run using `main.py`:
+```powershell
+python main.py
+```
+
+Or run via Uvicorn CLI:
+```powershell
+uvicorn app:app --host 127.0.0.1 --port 8080 --reload
+```
+
+The application will be accessible at:
+👉 **http://127.0.0.1:8080**
+
+Interactive Swagger API docs are available at:
+👉 **http://127.0.0.1:8080/docs**
+
+---
+
+## 🔌 API Reference
+
+### 1. Health Check
+`GET /api/health`
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "model_loaded": true,
+  "device": "cpu"
+}
+```
+
+### 2. Generate Summary
+`POST /api/summarize`
+
+**Request Body:**
+```json
+{
+  "text": "Hannah: Hey, are you free for lunch today?\nAmanda: Sure! What are you craving?\nHannah: Maybe sushi at Sakura around 12:30?\nAmanda: Sounds perfect, see you there!",
+  "max_length": 128,
+  "min_length": 20,
+  "num_beams": 8,
+  "length_penalty": 0.8
+}
+```
+
+**Response Body:**
+```json
+{
+  "summary": "Hannah and Amanda are going to eat sushi at Sakura around 12:30 today. They will meet at the restaurant.",
+  "input_words": 27,
+  "summary_words": 19,
+  "input_tokens": 39,
+  "summary_tokens": 22,
+  "reduction_percentage": 29.6,
+  "inference_time_seconds": 1.85
+}
+```
