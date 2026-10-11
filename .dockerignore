@@ -1,0 +1,47 @@
+# Git files and metadata
+.git/
+.gitignore
+.github/
+
+# Python cache files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Logs
+logs/
+*.log
+
+# Jupyter and editor files
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Local Python package build artifacts
+build/
+dist/
+*.egg-info/
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Documentation and licensing
+README.md
+LICENSE
+
+# OS-generated files
+.DS_Store
+Thumbs.db
