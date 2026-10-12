@@ -123,4 +123,3 @@ Interactive Swagger API docs are available at:
   "inference_time_seconds": 1.85
 }
 ```
-385723258596.dkr.ecr.ap-southeast-2.amazonaws.com/texts

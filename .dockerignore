@@ -1,7 +1,4 @@
-# Git files and metadata
-.git/
-.gitignore
-.github/
+
 
 # Python cache files
 __pycache__/
@@ -39,7 +36,6 @@ htmlcov/
 !.env.example
 
 # Documentation and licensing
-README.md
 LICENSE
 
 # OS-generated files
