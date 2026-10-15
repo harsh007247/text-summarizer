@@ -161,4 +161,3 @@ cython_debug/
 artifacts
 PROJECT_CHANGES.txt
 mainn.py
-README.md
